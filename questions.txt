@@ -1,15 +1,28 @@
 https://github.com/aianta/cmput404-tcp-lab
 
 Q1:
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+or alternatively
+
 
 
 Q2:
+There really isn't that big of a difference. We instantiate both the server and client socket the same way,
+the only difference is what we do with it.
 
+The server socket will bind to an IP and a port address (i.e. serverSock.bind((HOST, PORT))) so that it can grab any incoming traffic for that port.
+
+Alternatively the client socket is used in order to route to the 
+desired server port (i.e. with clientSock.connect((host, port)) where the host and port are that of the server such as host = "www.google.com" and port = 80 for client.py)
 
 Q3:
-
+We can use the flag SO_REUSEADDR in setsockopt, such as with serverSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1).
 
 Q4:
-
+We get the connecting IP and the port they are coming from.
 
 Q5:
+
+
+Q6:
+https://github.com/AidanHoremans/cmput404Lab2
