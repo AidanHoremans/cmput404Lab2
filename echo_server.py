@@ -1,33 +1,30 @@
-#!/usr/bin/env python3
-import socket
-import time
+import socket, requests
 
-#define address & buffer size
-HOST = ""
-PORT = 8001
-BUFFER_SIZE = 1024
+BYTES = 4096
+HOST = "127.0.0.1"
+PORT = 8080
 
-def main():
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    
-        #QUESTION 3
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        
-        #bind socket to address
-        s.bind((HOST, PORT))
-        #set to listening mode
-        s.listen(2)
-        
-        #continuously listen for connections
+def handle_connection(conn, addr):
+    with conn:
+        print(f"Connected by: " + addr)
         while True:
-            conn, addr = s.accept()
-            print("Connected by", addr)
-            
-            #recieve data, wait a bit, then send it back
-            full_data = conn.recv(BUFFER_SIZE)
-            time.sleep(0.5)
-            conn.sendall(full_data)
-            conn.close()
+            data = conn.recv(BYTES)
+            if not data:
+                break
+            print(data)
+            conn.send(data)
+        
 
-if __name__ == "__main__":
-    main()
+
+def start_server():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((HOST, PORT))
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #SOL_SOCKET = socket level, and we reuse the address -> how do we reuse a port? tells the operating system to allow us to use this even if the socket is in timeout
+        
+        s.listen()
+
+        conn, addr = s.accept()
+        handle_connection(conn, addr)
+    return
+
+start_server()
